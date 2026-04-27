@@ -31,6 +31,10 @@ decoderSpecs = do
   describe "array" $ do
     it "can be decoded" $
       decode (Decode.list Decode.int) "[1,2,5]" `shouldBe` Right [1, 2, 5]
+  describe "array failure" $ do
+    it "is accurately represented" $
+      decode (Decode.list Decode.int) "[1,true,3]"
+         `shouldBe` Left (Right (Index 1 (Failure "Not an int" (Data.Aeson.Bool True))))
   describe "oneOf" $ do
     it "can be decoded" $ do
       let oneOf = Decode.oneOf [fmap show Decode.int, Decode.string]

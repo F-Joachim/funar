@@ -68,7 +68,9 @@ jsonNull val = Decoder (\ json ->
 list :: Decoder a -> Decoder [a]
 list (Decoder decodeElement) = Decoder (\ json ->
   case json of
-  Json.Array arr -> traverse decodeElement (Vector.toList arr)
+  Json.Array arr -> traverse (\(index, element) ->
+                                mapLeft (Index index) (decodeElement element))
+                             (zip [0..] (Vector.toList arr))
   json -> Left (Failure "Not a JSON array" json))
 
 index :: Int -> Decoder a -> Decoder a
