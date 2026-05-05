@@ -1,1 +1,1 @@
-#lang deinprogramm/sdp/beginner
+#lang deinprogramm/sdp
