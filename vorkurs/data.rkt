@@ -300,6 +300,16 @@
        (* (first list)
           (list-product (rest list)))))))
 
+(: list-fold ((%a %b -> %b) %b (list-of %a) -> %b))
+
+(define list-fold
+  (lambda (f e list)
+    (cond
+      ((empty? list) e)
+      ((cons? list)
+       (f (first list)
+          (list-fold f e (rest list)))))))
+
 ; Aus einer Liste alle ungeraden Zahlen extrahieren
 (: extract-odds (list-of-numbers -> list-of-numbers))
 
@@ -393,6 +403,16 @@
       ((cons? list)
        (cons (f (first list))
              (map-list f (rest list)))))))
+
+
+(define map-list2
+  (lambda (f list)
+    (list-fold
+     (lambda (first-list rec-result)
+       (cons (f first-list)
+             rec-result))
+     empty
+     list)))
 
 ; Rust - enum
 ; algebraischer Datentyp (beides)
