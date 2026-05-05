@@ -147,11 +147,13 @@
 
 (define feed-dillo
   (lambda (dillo amount)
+    (define alive? (dillo-alive? dillo)) ; lokale Definition
+    (define weight (dillo-weight dillo))
     (make-dillo
-     (dillo-alive? dillo)
-     (if (dillo-alive? dillo)
-         (+ (dillo-weight dillo) amount) ; "then" / Konsequente
-         (dillo-weight dillo))
+     alive?
+     (if alive?
+         (+ weight amount) ; "then" / Konsequente
+         weight)
      #;(cond
        ((dillo-alive? dillo)
         (+ (dillo-weight dillo) amount))
