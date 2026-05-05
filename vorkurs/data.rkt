@@ -126,3 +126,5 @@
 (define run-over-dillo
   (lambda (dillo)
     (make-dillo #f (dillo-weight dillo))))
+
+; Gürteltier füttern, variable Menge
