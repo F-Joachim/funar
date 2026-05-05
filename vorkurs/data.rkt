@@ -90,11 +90,16 @@
 ; Tier auf dem texanischen Highway
 ; - Gürteltier ODER
 ; - Papagei
-; Fallunterscheidung
+; Fallunterscheidung, gemischte Daten
+(define animal
+  (signature (mixed dillo
+                    parrot)))
+
 
 ; Gürteltier hat folgende Eigenschaften:
 ; - lebendig?   UND
 ; - Gewicht
+
 
 ; Zustand des Gürteltiers zu einem bestimmten Zeitpunkt
 (define-record dillo
@@ -162,3 +167,27 @@
         (+ (dillo-weight dillo) amount))
        (else ; (not (dillo-alive? dillo))
         (dillo-weight dillo))))))
+
+; Ein Papagei:
+; - Satz UND
+; - Gewicht
+(define-record parrot
+  make-parrot
+  (parrot-sentence string)
+  (parrot-weight number))
+
+; Begrüßungspapagei, 1kg
+(define parrot1 (make-parrot "Welcome!" 1))
+(define parrot2 (make-parrot "Goodbye!" 2))
+
+; Papagei überfahren
+(: run-over-parrot (parrot -> parrot))
+
+(check-expect (run-over-parrot parrot1)
+              (make-parrot "" 1))
+
+(define run-over-parrot
+  (lambda (parrot)
+    (make-parrot "" (parrot-weight parrot))))
+
+
