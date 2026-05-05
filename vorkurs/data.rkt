@@ -235,6 +235,12 @@
   empty ; Singleton
   empty?) ; Prädikat
 
+#;(define-record empty-list
+  make-empty-list
+  empty?)
+
+;(define empty (make-empty-list))
+
 ; Eine Cons-Liste besteht aus:
 ; - erstes Element
 ; - Rest-Liste
