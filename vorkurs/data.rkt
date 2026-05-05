@@ -86,3 +86,22 @@
        (time-minute time))))
 
 ; aus den Minuten seit Mitternacht die Zeit berechnen
+
+; Tiere auf dem texanischen Highway
+
+; Gürteltier hat folgende Eigenschaften:
+; - lebendig?   UND
+; - Gewicht
+(define-record dillo
+  make-dillo
+  (dillo-alive? boolean)
+  (dillo-weight number))
+
+(: make-dillo (boolean number -> dillo))
+(: dillo-alive? (dillo -> boolean))
+(: dillo-weight (dillo -> number))
+
+; lebendiges Gürteltier, 10kg
+(define dillo1 (make-dillo #t 10))
+; totes Gürteltier, 8kg
+(define dillo2 (make-dillo #f 8))
