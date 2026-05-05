@@ -379,11 +379,20 @@
     (cond
       ((empty? list) empty)
       ((cons? list)
-       (cons
-        (+ 1 (first list))
-        (inc-list (rest list)))))))
+       (cons (inc (first list))
+             (inc-list (rest list)))))))
               
-       
+(define inc (lambda (x) (+ 1 x)))
+
+(: map-list ((%a -> %b) (list-of %a) -> (list-of %b)))
+
+(define map-list
+  (lambda (f list)
+    (cond
+      ((empty? list) empty)
+      ((cons? list)
+       (cons (f (first list))
+             (map-list f (rest list)))))))
 
 ; Rust - enum
 ; algebraischer Datentyp (beides)
