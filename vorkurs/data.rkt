@@ -226,9 +226,10 @@
 ; - die leere Liste   ODER
 ; - eine Cons-Liste aus erstem Element UND Rest-Liste
 ;                                               ^^^^^ Selbstbezug
-(define list-of-numbers
-  (signature (mixed empty-list
-                    cons-list)))
+(define list-of
+  (lambda (element)
+    (signature (mixed empty-list
+                      (cons-list-of element)))))
 
 
 (define-singleton empty-list ; Signatur
@@ -244,11 +245,11 @@
 ; Eine Cons-Liste besteht aus:
 ; - erstes Element
 ; - Rest-Liste
-(define-record cons-list
+(define-record (cons-list-of element) ; macht lambda
   cons
   cons?
-  (first number)
-  (rest list-of-numbers)) ; Selbstbezug
+  (first element)
+  (rest (list-of element))) ; Selbstbezug
 
 ; 1elementige Liste: 5
 (define list1 (cons 5 empty))
@@ -259,8 +260,11 @@
 ; 4elementige Liste: 3 2 5 8
 (define list4 (cons 3 list3))
 
+(define list-of-numbers
+  (signature (list-of number)))
+
 ; Liste aufsummieren
-(: list-sum (list-of-numbers -> number))
+(: list-sum ((list-of number) -> number))
 
 (check-expect (list-sum list4)
               18)
@@ -318,7 +322,11 @@
 ; - Namen in lambda aufnehmen (rekursive Aufrufe nicht vergessen)
 
 ; Elemente einer Liste extrahieren, die ein Kriterium
-(: extract ((number -> boolean) list-of-numbers -> list-of-numbers))
+; eingebaut als filter
+; bei jedem Aufruf potentiell andere Elemente
+; %element: Signaturvariable
+(: extract ((%element -> boolean) (list-of %element) -> (list-of %element)))
+;(: extract ((number -> boolean) list-of-numbers -> list-of-numbers))
 
 (check-expect (extract even? list4)
               (cons 2 (cons 8 empty)))
@@ -334,6 +342,48 @@
            (cons (first list)
                  (extract p? (rest list)))
            (extract p? (rest list)))))))
+
+(define dillos (cons dillo1 (cons dillo2 empty)))
+
+(define highway (cons dillo1 (cons dillo2 (cons parrot1 (cons parrot2 empty)))))
+
+; Alle Tiere überfahren
+(: run-over-animals ((list-of animal) -> (list-of animal)))
+
+(check-expect (run-over-animals highway)
+              (cons (run-over-dillo dillo1)
+                    (cons (run-over-dillo dillo2)
+                          (cons (run-over-parrot parrot1)
+                                (cons (run-over-parrot parrot2)
+                                      empty)))))
+
+(define run-over-animals
+  (lambda (list)
+    (cond
+      ((empty? list) empty)
+      ((cons? list)
+       (cons (run-over-animal (first list))
+             (run-over-animals (rest list)))))))
+
+; Alle Zahlen einer Liste inkrementieren
+(: inc-list ((list-of number) -> (list-of number)))
+
+(check-expect (inc-list list4)
+              (cons 4
+                    (cons 3
+                          (cons 6
+                                (cons 9 empty)))))
+
+(define inc-list
+  (lambda (list)
+    (cond
+      ((empty? list) empty)
+      ((cons? list)
+       (cons
+        (+ 1 (first list))
+        (inc-list (rest list)))))))
+              
+       
 
 ; Rust - enum
 ; algebraischer Datentyp (beides)
