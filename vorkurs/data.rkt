@@ -210,10 +210,39 @@
       ((dillo? animal) (run-over-dillo animal))
       ((parrot? animal) (run-over-parrot animal)))))
 
+
+; ... vs OO: 2 Methoden
+; neues Tier auf dem Highway:
+; Open/Closed: OO +, FP -
+; neue Funktion:
+; Open/Closed: FP +, OO -
+
 ; Datenmodellierung mit
 ; Fallunterscheidungen und         Summen     ODER-Daten
 ; zusammengesetzten Daten      und Produkten  UND-Daten
 
+
+; Liste ist eins der folgenden:
+; - die leere Liste   ODER
+; - eine Cons-Liste aus erstem Element UND Rest-Liste
+;                                               ^^^^^ Selbstbezug
+(define list-of-numbers
+  (signature (mixed empty-list
+                    cons-list)))
+
+
+(define-singleton empty-list ; Signatur
+  empty ; Singleton
+  empty?) ; Prädikat
+
+; Eine Cons-Liste besteht aus:
+; - erstes Element
+; - Rest-Liste
+(define-record cons-list
+  cons
+  (first number)
+  (rest list-of-numbers))
+  
 
 ; Rust - enum
 ; algebraischer Datentyp (beides)
