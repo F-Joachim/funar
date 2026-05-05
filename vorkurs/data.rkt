@@ -149,7 +149,10 @@
   (lambda (dillo amount)
     (make-dillo
      (dillo-alive? dillo)
-     (cond
+     (if (dillo-alive? dillo)
+         (+ (dillo-weight dillo) amount) ; "then" / Konsequente
+         (dillo-weight dillo))
+     #;(cond
        ((dillo-alive? dillo)
         (+ (dillo-weight dillo) amount))
        (else ; (not (dillo-alive? dillo))
