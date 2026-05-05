@@ -5,7 +5,7 @@
 ; - Hund   ODER
 ; - Katze  ODER
 ; - Schlange
-; Fallunterscheidung
+; Fallunterscheidung / Summe
 ; hier speziell: Aufzählung
 
 ; Signatur dafür:
@@ -43,4 +43,23 @@
     (cond
       ((equal? pet "dog") #t)
       ((equal? pet "cat") #t)
-      ((equal? pet "snake") #f))))
+      ((equal? pet "snake") #f)
+      (else #f))))
+
+;(cute? "mouse")
+
+; Uhrzeit besteht aus / hat folgende Eigenschaften:
+; - Stunde  UND
+; - Minute
+; zusammengesetzte Daten / Produkt
+(define-record time ; Signatur
+  make-time ; Konstruktor
+  (time-hour   natural) ; "natürliche Zahlen" 0,1,2,3,4,5...
+  (time-minute natural))
+
+(: make-time (natural natural -> time))
+
+; 11 Uhr 15 Minuten
+(define time1 (make-time 11 15))
+; 14:23
+(define time2 (make-time 14 23))
