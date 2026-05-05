@@ -104,7 +104,7 @@
 ; Zustand des Gürteltiers zu einem bestimmten Zeitpunkt
 (define-record dillo
   make-dillo
-  dillo?
+  dillo? ; Prädikat
   (dillo-alive? boolean)
   (dillo-weight number))
 
@@ -179,6 +179,8 @@
   (parrot-sentence string)
   (parrot-weight number))
 
+(: parrot? (any -> boolean))
+
 ; Begrüßungspapagei, 1kg
 (define parrot1 (make-parrot "Welcome!" 1))
 (define parrot2 (make-parrot "Goodbye!" 2))
@@ -207,3 +209,37 @@
     (cond
       ((dillo? animal) (run-over-dillo animal))
       ((parrot? animal) (run-over-parrot animal)))))
+
+; Datenmodellierung mit
+; Fallunterscheidungen und         Summen     ODER-Daten
+; zusammengesetzten Daten      und Produkten  UND-Daten
+
+
+; Rust - enum
+; algebraischer Datentyp (beides)
+; enum Animal { Dillo(bool, weight), Parrot(string, weight) }
+
+; Java
+; Produkt: record
+; Summe: sealed interface / sealed class
+; Aufzählungen: enum
+
+; Kotlin
+; Produkt: data class
+; Summe: sealed interface / sealed class
+
+; Scala
+; enum (case class, sealed trait)
+
+; C++
+; Summen: variant
+
+; C: tagged union
+
+; Python
+; Produkt: data class
+; Summe: Klassen
+
+; TypeScript
+; Produkt: interface
+; Summe: "tagged union"
