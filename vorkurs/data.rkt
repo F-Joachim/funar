@@ -317,6 +317,14 @@
 ; - Unterschiede durch (abstrakte) Namen ersetzen
 ; - Namen in lambda aufnehmen (rekursive Aufrufe nicht vergessen)
 
+; Elemente einer Liste extrahieren, die ein Kriterium
+(: extract ((number -> boolean) list-of-numbers -> list-of-numbers))
+
+(check-expect (extract even? list4)
+              (cons 2 (cons 8 empty)))
+(check-expect (extract odd? list4)
+              (cons 3 (cons 5 empty)))
+
 (define extract
   (lambda (p? list)
     (cond
