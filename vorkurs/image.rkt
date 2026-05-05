@@ -25,10 +25,36 @@
 ; - Unterschiede durch (abstrakte) Namen ersetzen
 ; - Namen in ein lambda aufnehmen
 
+; Konstruktionsanleitungen
+
+; Kurzbeschreibung
+; quadratisches Kachelmuster generieren
+
+; Signaturdeklaration
+(: tile (image image -> image))
+
+
+
 (define tile
   (lambda (image1 image2)
     (above
      (beside image1 image2)
      (beside image2 image1))))
 
-(tile circle1 star1)
+;(tile circle1 star1)
+
+#|
+class C {
+  // x steht für Speicherzelle, in der die Zahl drinsteht
+  static int m(int x) {
+     ... x ...
+     x = x + 1;
+     ... x ...
+  }
+
+
+  ... C.m(42) ...
+
+|#
+
+
