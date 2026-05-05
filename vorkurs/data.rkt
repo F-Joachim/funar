@@ -87,7 +87,10 @@
 
 ; aus den Minuten seit Mitternacht die Zeit berechnen
 
-; Tiere auf dem texanischen Highway
+; Tier auf dem texanischen Highway
+; - Gürteltier ODER
+; - Papagei
+; Fallunterscheidung
 
 ; Gürteltier hat folgende Eigenschaften:
 ; - lebendig?   UND
