@@ -84,3 +84,5 @@
   (lambda (time)
     (+ (* (time-hour time) 60)
        (time-minute time))))
+
+; aus den Minuten seit Mitternacht die Zeit berechnen
