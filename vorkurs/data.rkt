@@ -18,3 +18,29 @@
 (check-expect (cute? "dog") #t)
 (check-expect (cute? "cat") #t)
 (check-expect (cute? "snake") #f)
+
+; Gerüst
+#;(define cute?
+  (lambda (pet)
+    ...))
+
+; Schablone
+#;(define cute?
+  (lambda (pet)
+    ; Fallunterscheidung => Verzweigung
+    ; 1 Zweig pro Fall
+    ; (<Bedingung> <Ergebnis>)
+    (cond
+      ((equal? pet "dog") ...)
+      ((equal? pet "cat") ...)
+      ((equal? pet "snake") ...))))
+
+(define cute?
+  (lambda (pet)
+    ; Fallunterscheidung => Verzweigung
+    ; 1 Zweig pro Fall
+    ; (<Bedingung> <Ergebnis>)
+    (cond
+      ((equal? pet "dog") #t)
+      ((equal? pet "cat") #t)
+      ((equal? pet "snake") #f))))
