@@ -13,7 +13,13 @@ Vorgehensweise:
   - Währung: "Ich bekomme 1€ jetzt."
   - Betrag: "Ich bekomme 100€ jetzt."
   - Später: "Ich bekomme Weihnachten 100€."
+  ----> Selbstbezüge
+
+- nächstes Beispiel: Currency Swap
+  Weihnachten bekomme ich 100€ und zahle 100$.
 -}
+
+
 
 data Date = MkDate String -- ISO-Format
   deriving (Show, Eq, Ord)
@@ -40,9 +46,12 @@ zcb1 = ZeroCouponBond xmas 100 EUR
 -}
 
 data Contract =
-    One Currency
+    Zero
+  | One Currency
   | Many Amount Contract
   | Later Date Contract
+  | Exchange Contract
+  | And Contract Contract
   deriving Show
 
 -- "Ich bekomme 1€ jetzt."
@@ -64,3 +73,17 @@ zeroCouponBond date amount currency = Later date (Many amount (One currency))
 
 zcb1' :: Contract
 zcb1' = zeroCouponBond xmas 100 EUR
+
+-- "Ich zahle 1€ jetzt."
+c4 :: Contract
+c4 = Exchange (One EUR)
+
+-- "Ich bekomme 1€ jetzt."
+c5 :: Contract
+c5 = Exchange (Exchange (One EUR))
+
+fxSwap1 = Later xmas (And (Many 100 (One EUR))
+                          (Exchange (Many 100 (One USD))))
+
+fxSwap1' = And (zeroCouponBond xmas 100 EUR)
+               (Exchange (zeroCouponBond xmas 100 USD))
