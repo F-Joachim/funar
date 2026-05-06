@@ -81,3 +81,4 @@ type Weight = Integer -- Typsynonym
 data Dillo =
     MkDillo { dilloLiveness :: Liveness,
               dilloWeight :: Weight }
+    deriving Show
