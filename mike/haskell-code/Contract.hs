@@ -127,7 +127,7 @@ semantics (And contract1 contract2) today =
 
 
 -- >>> semantics c6 (MkDate "2026-05-06")
--- ([MkPayment (MkDate "2026-05-06") Incoming 100 EUR], Many 100 (Later xmas (One EUR)))
+-- ([MkPayment (MkDate "2026-05-06") Incoming 100.0 EUR],And Zero (Later (MkDate "2026-12-24") (One EUR)))
 
 c6 = Many 100 (And (One EUR)
                    (Later xmas (One EUR)))
