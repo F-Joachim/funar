@@ -41,6 +41,14 @@ data Pet = -- neuer Datentyp
     Dog | Cat | Snake
     deriving Show -- machen wir immer
 
+instance Eq Pet where  -- Implementierung der Typklasse Eq
+  (==) :: Pet -> Pet -> Bool
+  (==) Dog Dog = True
+  (==) Cat Cat = True
+  (==) Snake Snake = True
+  (==) _ _ = False
+
+
 -- Ist Haustier niedlich?
 isCute :: Pet -> Bool
 
@@ -79,7 +87,7 @@ isCute Snake = False
 -- keine "boolean blindness"
 data Liveness =
     Alive | Dead
-    deriving Show
+    deriving (Eq, Show)
 
 type Weight = Integer -- Typsynonym
 
@@ -323,10 +331,7 @@ listIndex :: Eq a => [a] -> a -> Optional Integer
 -- Result 3
 
 -- >>> listIndex [Cat, Dog, Cat, Snake, Cat] Snake
--- No instance for `Eq Pet' arising from a use of `listIndex'
--- In the expression: listIndex [Cat, Dog, Cat, Snake, Cat] Snake
--- In an equation for `it_afRzc':
---     it_afRzc = listIndex [Cat, Dog, Cat, Snake, Cat] Snake
+-- Result 3
 
 listIndex [] element = Null
 listIndex (x:xs) element =
@@ -343,3 +348,30 @@ listIndex (x:xs) element =
 -- class Eq a where
 --   (==) :: a -> a -> Bool
 --   (/=) :: a -> a -> Bool
+
+-- >>> :info Show
+-- type Show :: * -> Constraint
+-- class Show a where
+--   show :: a -> String
+
+-- >>> :info Ord
+-- type Ord :: * -> Constraint
+-- class Eq a => Ord a where
+--   compare :: a -> a -> Ordering
+--   (<) :: a -> a -> Bool
+--   (<=) :: a -> a -> Bool
+--   (>) :: a -> a -> Bool
+--   (>=) :: a -> a -> Bool
+--   max :: a -> a -> a
+--   min :: a -> a -> a
+
+-- >>> :info Num
+-- type Num :: * -> Constraint
+-- class Num a where
+--   (+) :: a -> a -> a
+--   (-) :: a -> a -> a
+--   (*) :: a -> a -> a
+--   negate :: a -> a
+--   abs :: a -> a
+--   signum :: a -> a
+--   fromInteger :: Integer -> a
