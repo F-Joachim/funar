@@ -5,7 +5,7 @@ x :: Integer
 x = 23 + 2 * 21
 
 y :: Integer
-y = x + 5
+y = x + 6
 
 -- Kommentar
 
