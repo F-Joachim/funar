@@ -47,6 +47,7 @@
 
 ; acc: Liste der "bisher gesehenen Elemente", umgedreht
 
+; endrekursiv / tail-recursive
 (define rev2
   (lambda (list acc)
     ; Schleifeninvariante
