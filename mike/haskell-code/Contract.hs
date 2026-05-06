@@ -98,3 +98,10 @@ data Payment = MkPayment Date Direction Amount Currency
 -- Zahlungen bis zu dem Datum, "heute"
 -- -> "Residualvertrag"
 semantics :: Contract -> Date -> ([Payment], Contract)
+
+
+-- >>> semantics c6 (MkDate "2026-05-06")
+-- ([MkPayment (MkDate "2026-05-06") Incoming 100 EUR], Many 100 (Later xmas (One EUR)))
+
+c6 = Many 100 (And (One EUR)
+                   (Later xmas (One EUR)))
