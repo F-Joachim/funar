@@ -303,3 +303,9 @@ listSum :: [Integer] -> Integer
 -- 18
 listSum [] = 0
 listSum (x:xs) = x + listSum xs
+
+-- Funktion auf alle Elemente einer Liste anwenden
+-- eingebaut als map
+listMap :: (a -> b) -> [a] -> [b]
+listMap f [] = undefined
+listMap f (x:xs) = (f x) : (listMap f xs)
