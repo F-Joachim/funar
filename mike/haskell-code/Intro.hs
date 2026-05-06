@@ -21,4 +21,35 @@ double :: Integer -> Integer
 -- double = \ x -> x * 2
 double x = x * 2 -- syntaktischer Zucker
 
---
+-- Zahl vervierfachen
+quadruple :: Integer -> Integer
+quadruple x =
+    let d = double x -- lokale Gleichung
+    in double d
+
+-- Haustier ist eins der folgenden:
+-- - Hund ODER
+-- - Katze ODER
+-- - Schlange
+-- Aufzählung
+data Pet = -- neuer Datentyp
+    Dog | Cat | Snake
+    deriving Show -- machen wir immer
+
+-- Ist Haustier niedlich?
+isCute :: Pet -> Bool
+
+
+
+isCute pet =
+    case pet of
+        Dog -> True
+        Cat -> True
+        Snake -> False
+
+-- Schablone
+-- isCute pet =
+--     case pet of
+--         Dog -> ...
+--         Cat -> ...
+--         Snake -> ...
