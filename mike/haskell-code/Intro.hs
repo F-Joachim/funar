@@ -193,8 +193,44 @@ feedAnimal'(MkDillo liveness weight, amount) =
 feedAnimal'(MkParrot sentence weight, amount) =
   MkParrot sentence (weight + amount)
 
-tuplify :: (Animal -> Weight -> Animal) -> ((Animal, Weight) -> Animal)
-tuplify f = \ (animal, weight) -> f animal weight
+-- eingebaut als uncurry
+-- tuplify :: (Animal -> Weight -> Animal) -> ((Animal, Weight) -> Animal)
+entschönfinkeln :: (a -> b -> c) -> ((a, b) -> c) -- Typvariablen (Kleinbuchstaben)
+-- tuplify f = \ (a, b) -> f a b
+entschönfinkeln f (a, b) = f a b
+
+-- eingebaut als curry
+schönfinkeln :: ((a, b) -> c) -> (a -> b -> c)
+-- untuplify f = \ a -> \ b -> f (a, b)
+schönfinkeln f a b = f (a, b)
+
+-- Haskell Curry
+-- Moses Schönfinkel
+
+-- eingebaut als flip
+swap :: (a -> b -> c) -> (b -> a -> c)
+
+-- >>> swap feedAnimal 5 dillo1
+-- MkDillo {dilloLiveness = Alive, dilloWeight = 15}
+
+-- swap f = \ b -> \ a -> f a b
+swap f b a = f a b
+
+-- Funktionskomposition
+-- eingebaut als .
+o :: (b -> c) -> (a -> b) -> (a -> c)
+o f g = \ a -> f (g a)
+
+-- Name aus Sonderzeichen => Infix-Operator
+
+pfff :: Animal -> Animal
+
+-- >>> pfff dillo1
+-- MkDillo {dilloLiveness = Dead, dilloWeight = 15}
+pfff = runOverAnimal . (swap feedAnimal 5)
+
+-- >>> tuplify feedAnimal (dillo1, 5)
+-- MkDillo {dilloLiveness = Alive, dilloWeight = 15}
 
 -- Der Einflußbereich einer "Flotte" ("Shape") ist eins der folgenden:
 -- - ein Kreis
