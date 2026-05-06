@@ -8,12 +8,17 @@ Vorgehensweise:
 
 - einfaches Beispiel
   "Ich bekomme Weihnachten 100€."
+- Beispiel zerlegen in "atomare Bestandteile" / "Ideen" / "Bausteine"
 
+  - Währung: "Ich bekomme 1€ jetzt."
+  - Betrag: "Ich bekomme 100€ jetzt."
+  - Später: "Ich bekomme Weihnachten 100€."
 -}
 
 data Date = MkDate String -- ISO-Format
   deriving (Show, Eq, Ord)
 
+xmas :: Date
 xmas = MkDate "2026-12-24"
 
 type Amount = Double
@@ -21,10 +26,41 @@ type Amount = Double
 data Currency = EUR | USD | GBP | YEN
   deriving Show
 
+{-
 data Contract =
-    ZeroCouponBond Date Amount Currency
+      ZeroCouponBond Date Amount Currency
+    | Future 
+    | Call 
+    | Put
     deriving Show
-
+ 
 -- "Ich bekomme Weihnachten 100€."
 zcb1 :: Contract
 zcb1 = ZeroCouponBond xmas 100 EUR
+-}
+
+data Contract =
+    One Currency
+  | Many Amount Contract
+  | Later Date Contract
+  deriving Show
+
+-- "Ich bekomme 1€ jetzt."
+c1 :: Contract
+c1 = One EUR
+
+-- "Ich bekomme 100€ jetzt."
+c2 :: Contract
+c2 = Many 100 (One EUR)
+
+-- "Ich bekomme 2000€ jetzt."
+c3 = Many 20 (Many 100 (One EUR))
+
+-- "Ich bekomme Weihnachten 100€."
+zcb1 = Later xmas (Many 100 (One EUR))
+
+zeroCouponBond :: Date -> Amount -> Currency -> Contract
+zeroCouponBond date amount currency = Later date (Many amount (One currency))
+
+zcb1' :: Contract
+zcb1' = zeroCouponBond xmas 100 EUR
