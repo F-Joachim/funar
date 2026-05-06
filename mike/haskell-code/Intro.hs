@@ -316,10 +316,17 @@ data Optional a =
   deriving Show
 
 -- Index eines Elements in einer Liste
+-- Eq a: Constraint, "a hat mit == vergleichbare Werte"
 listIndex :: Eq a => [a] -> a -> Optional Integer
 
 -- >>> listIndex [1,5,7,12,9] 12
 -- Result 3
+
+-- >>> listIndex [Cat, Dog, Cat, Snake, Cat] Snake
+-- No instance for `Eq Pet' arising from a use of `listIndex'
+-- In the expression: listIndex [Cat, Dog, Cat, Snake, Cat] Snake
+-- In an equation for `it_afRzc':
+--     it_afRzc = listIndex [Cat, Dog, Cat, Snake, Cat] Snake
 
 listIndex [] element = Null
 listIndex (x:xs) element =
@@ -328,3 +335,11 @@ listIndex (x:xs) element =
     else case listIndex xs element of
            Null -> Null
            Result index -> Result (index+1)
+
+-- Typklasse ~~~ "Interface"
+-- Implementierung: "instance"
+-- >>> :info Eq
+-- type Eq :: * -> Constraint
+-- class Eq a where
+--   (==) :: a -> a -> Bool
+--   (/=) :: a -> a -> Bool
