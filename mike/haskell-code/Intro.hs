@@ -227,7 +227,7 @@ pfff :: Animal -> Animal
 
 -- >>> pfff dillo1
 -- MkDillo {dilloLiveness = Dead, dilloWeight = 15}
-pfff = runOverAnimal . (swap feedAnimal 5)
+pfff = runOverAnimal . flip feedAnimal 5
 
 -- >>> tuplify feedAnimal (dillo1, 5)
 -- MkDillo {dilloLiveness = Alive, dilloWeight = 15}
@@ -277,3 +277,29 @@ within (MkSquare (MkPoint squareX squareY) sideLength) (MkPoint x y) =
         && ((y >= squareY) && (y <= rightTopY))
 within (MkOverlap shape1 shape2) point =
   within shape1 point || within shape2 point
+
+-- Liste ist eins der folgenden:
+-- - die leere Liste -ODER-                            []
+-- - eine Cons-Liste aus erstem Element und Rest-Liste :
+
+-- 1elementige Liste 5
+list1 :: [Integer]
+list1 = 5 : []
+-- 2elementige Liste: 2 5
+list2 :: [Integer]
+list2 = 2 : 5 : []
+
+-- 3elementige Liste: 2 5 8
+list3 :: [Integer]
+list3 = [2,5,8]
+
+-- 4elementige Liste: 3 2 5 8
+list4 :: [Integer]
+list4 = 3 : list3
+
+-- Liste aufsummieren
+listSum :: [Integer] -> Integer
+-- >>> listSum list4
+-- 18
+listSum [] = 0
+listSum (first:rest) = first + listSum rest
