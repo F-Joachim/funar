@@ -27,6 +27,11 @@ quadruple x =
     let d = double x -- lokale Gleichung
     in double d
 
+doublePlus :: Integer -> Integer -> Integer
+-- doublePlus x y = x * 2 + y
+
+doublePlus = \ x -> \ y -> x * 2 + y
+
 -- Haustier ist eins der folgenden:
 -- - Hund ODER
 -- - Katze ODER
