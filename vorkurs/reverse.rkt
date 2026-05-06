@@ -56,3 +56,8 @@
       ((cons? list)
        (rev2 (rest list) ; kein Kontext: tail call, benötigen keinen Platz auf dem "Stack"
              (cons (first list) acc))))))
+
+; auf JVM: auch tail calls verbrauchen Platz auf dem Stack
+; => Kotlin: tailrec, Scala: @tailrec, Clojure: loop
+
+; TCO / "tail call optimization" vs. proper tail calls
