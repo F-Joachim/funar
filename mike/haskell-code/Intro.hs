@@ -287,7 +287,7 @@ list1 :: [Integer]
 list1 = 5 : []
 -- 2elementige Liste: 2 5
 list2 :: [Integer]
-list2 = 2 : 5 : []
+list2 = 2 : (5 : [])
 
 -- 3elementige Liste: 2 5 8
 list3 :: [Integer]
@@ -302,4 +302,4 @@ listSum :: [Integer] -> Integer
 -- >>> listSum list4
 -- 18
 listSum [] = 0
-listSum (first:rest) = first + listSum rest
+listSum (x:xs) = x + listSum xs
