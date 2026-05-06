@@ -375,3 +375,6 @@ listIndex (x:xs) element =
 --   abs :: a -> a
 --   signum :: a -> a
 --   fromInteger :: Integer -> a
+
+double' :: Num a => a -> a
+double' x = x * 2
