@@ -309,3 +309,22 @@ listSum (x:xs) = x + listSum xs
 listMap :: (a -> b) -> [a] -> [b]
 listMap f [] = undefined
 listMap f (x:xs) = (f x) : (listMap f xs)
+
+data Optional a =
+    Null
+  | Result a
+  deriving Show
+
+-- Index eines Elements in einer Liste
+listIndex :: Eq a => [a] -> a -> Optional Integer
+
+-- >>> listIndex [1,5,7,12,9] 12
+-- Result 3
+
+listIndex [] element = Null
+listIndex (x:xs) element =
+    if x == element
+    then Result 0
+    else case listIndex xs element of
+           Null -> Null
+           Result index -> Result (index+1)
