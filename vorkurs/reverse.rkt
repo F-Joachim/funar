@@ -49,8 +49,9 @@
 
 (define rev2
   (lambda (list acc)
+    ; Schleifeninvariante
     (cond
       ((empty? list) acc) ; haben alle Elemente gesehen
       ((cons? list)
-       (rev2 (rest list) ; kein Kontext: tail call
+       (rev2 (rest list) ; kein Kontext: tail call, benötigen keinen Platz auf dem "Stack"
              (cons (first list) acc))))))
