@@ -16,5 +16,15 @@ data Date = MkDate String -- ISO-Format
 
 xmas = MkDate "2026-12-24"
 
+type Amount = Double
+
+data Currency = EUR | USD | GBP | YEN
+  deriving Show
+
 data Contract =
     ZeroCouponBond Date Amount Currency
+    deriving Show
+
+-- "Ich bekomme Weihnachten 100€."
+zcb1 :: Contract
+zcb1 = ZeroCouponBond xmas 100 EUR
