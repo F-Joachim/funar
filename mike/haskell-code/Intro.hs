@@ -181,6 +181,21 @@ feedAnimal (MkDillo liveness weight) amount =
 feedAnimal (MkParrot sentence weight) amount = 
     MkParrot sentence (weight + amount)
 
+feedAnimal' :: (Animal, Weight) -> Animal
+
+-- >>> feedAnimal'(dillo1, 5)
+-- MkDillo {dilloLiveness = Alive, dilloWeight = 15}
+
+feedAnimal'(MkDillo liveness weight, amount) =
+  case liveness of
+    Alive -> MkDillo Alive (weight + amount)
+    Dead -> MkDillo Dead weight
+feedAnimal'(MkParrot sentence weight, amount) =
+  MkParrot sentence (weight + amount)
+
+tuplify :: (Animal -> Weight -> Animal) -> ((Animal, Weight) -> Animal)
+tuplify f = \ (animal, weight) -> f animal weight
+
 -- Der Einflußbereich einer "Flotte" ("Shape") ist eins der folgenden:
 -- - ein Kreis
 -- - ein Quadrat
