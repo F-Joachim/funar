@@ -87,3 +87,14 @@ fxSwap1 = Later xmas (And (Many 100 (One EUR))
 
 fxSwap1' = And (zeroCouponBond xmas 100 EUR)
                (Exchange (zeroCouponBond xmas 100 USD))
+
+data Direction = Incoming | Outgoing
+  deriving Show
+
+data Payment = MkPayment Date Direction Amount Currency
+  deriving Show
+
+-- Bedeutung eines Vertrags / Semantik
+-- Zahlungen bis zu dem Datum, "heute"
+-- -> "Residualvertrag"
+semantics :: Contract -> Date -> ([Payment], Contract)
