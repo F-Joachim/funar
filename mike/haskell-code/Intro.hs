@@ -180,3 +180,11 @@ feedAnimal (MkDillo liveness weight) amount =
         Dead -> MkDillo Dead weight
 feedAnimal (MkParrot sentence weight) amount = 
     MkParrot sentence (weight + amount)
+
+-- Der Einflußbereich einer "Flotte" ("Shape") ist eins der folgenden:
+-- - ein Kreis
+-- - ein Quadrat
+-- - die Überlagerung zweier Shapes
+
+-- 1. Datentyp für Shape
+-- 2. Funktion, die feststellt, ob ein Punkt innerhalb eines Shapes liegt
