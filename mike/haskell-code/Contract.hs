@@ -94,10 +94,36 @@ data Direction = Incoming | Outgoing
 data Payment = MkPayment Date Direction Amount Currency
   deriving Show
 
+scalePayment :: Amount -> Payment -> Payment
+scalePayment factor (MkPayment direction date amount currency) =
+  MkPayment direction date (factor * amount) currency
+
+invertPayment :: Payment -> Payment
+invertPayment (MkPayment date Incoming amount currency) =
+  MkPayment date Outgoing amount currency
+invertPayment (MkPayment date Outgoing amount currency) =
+  MkPayment date Incoming amount currency
+
 -- Bedeutung eines Vertrags / Semantik
 -- Zahlungen bis zu dem Datum, "heute"
 -- -> "Residualvertrag"
 semantics :: Contract -> Date -> ([Payment], Contract)
+semantics Zero today = ([], Zero)
+semantics (One currency) today = ([MkPayment today Incoming 1 currency], Zero)
+semantics (Many amount contract) today =
+  let (payments, residualContract) = semantics contract today
+   in (map (scalePayment amount) payments, Many amount residualContract)
+semantics (Exchange contract) today =
+  let (payments, residualContract) = semantics contract today
+   in (map invertPayment payments, Exchange residualContract)
+semantics (Later date contract) today =
+  if today >= date
+    then semantics contract today
+    else ([], Later date contract)
+semantics (And contract1 contract2) today =
+  let (payments1, residualContract1) = semantics contract1 today
+      (payments2, residualContract2) = semantics contract2 today
+   in (payments1 ++ payments2, And residualContract1 residualContract2)
 
 
 -- >>> semantics c6 (MkDate "2026-05-06")
