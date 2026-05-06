@@ -44,13 +44,23 @@ isCute :: Pet -> Bool
 -- >>> isCute Snake
 -- False
 
-isCute pet =
-    case pet of
-        Dog -> True
-        Cat -> True
-        Snake -> False
+-- 1 Gleichung pro Fall
+isCute Dog = True
+isCute Cat = True
+isCute Snake = False
+
+-- isCute pet =
+--     case pet of
+--         Dog -> True
+--         Cat -> True
+--         Snake -> False
 
 -- Schablone
+
+-- isCute Dog = undefined
+-- isCute Cat = undefined
+-- isCute Snake = undefined
+
 -- isCute pet =
 --     case pet of
 --         Dog -> ...
