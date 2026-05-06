@@ -11,9 +11,14 @@
     (cond
       ((empty? list) empty)
       ((cons? list)
-       (append-element
+       (append-element ; Kontext des Aufrufs von rev
         (rev (rest list))
         (first list))))))
+
+; Standard-Implementierung für Speichern von Kontexten:
+; Stack bzw. Array aus "Frames" für die Funktionsaufrufe
+; -> hier Platzverbrauch proportional zur Länge der Liste
+; => tendenziell "Stack-Overflow", weil Stack klein und fest in der Größe
 
 ; Laufzeit für n Elemente:
 ; 1 + 2 + ... + n-1 + n = O(n^2)
@@ -33,3 +38,19 @@
       ((cons? list)
        (cons (first list) 
              (append-element (rest list) element))))))
+
+; Liste umdrehen mit Zwischenergebnis
+(: rev2 ((list-of %a) (list-of %a) -> (list-of %a)))
+
+(check-expect (rev2 (list 1 2 3 4) empty)
+              (list 4 3 2 1))
+
+; acc: Liste der "bisher gesehenen Elemente", umgedreht
+
+(define rev2
+  (lambda (list acc)
+    (cond
+      ((empty? list) acc) ; haben alle Elemente gesehen
+      ((cons? list)
+       (rev2 (rest list)
+             (cons (first list) acc))))))
