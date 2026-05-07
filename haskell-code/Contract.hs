@@ -1,3 +1,4 @@
+{-# LANGUAGE InstanceSigs #-}
 module Contract where
 
 -- Auftrag: komplexe Finanzverträge als Daten repräsentieren
@@ -99,11 +100,19 @@ data Contract =
   | And Contract Contract
   deriving Show
 
+instance Semigroup Contract where
+  (<>) :: Contract -> Contract -> Contract
+  (<>) = And
+
+instance Monoid Contract where
+  mempty :: Contract
+  mempty = Zero
+
 -- Bedeutung eines Vertrags / Semantik
 -- Zahlungen bis zu dem Datum, "heute"
 -- -> "Residualvertrag"
 semantics :: Contract -> Date -> ([Payment], Contract)
-semantics Zero _ = ([], Zero)
+semantics Zero _ = mempty
 semantics (One currency) now = ([MkPayment now Incoming 1 currency], Zero)
 semantics (Many amount contract) now =
   let (ps, c) = semantics contract now
@@ -117,14 +126,14 @@ semantics (Exchange contract) now =
 semantics (And contract1 contract2) now =
   let (ps1, c1) = semantics contract1 now
       (ps2, c2) = semantics contract2 now
-  in (ps1 ++ ps2, and' c1 c2)
+  in (ps1 <> ps2, and' c1 c2)
 
 -- >>> and' Zero Zero
 -- Zero
 and' :: Contract -> Contract -> Contract
 and' Zero contract = contract
 and' contract Zero = contract
-and' c1 c2         = And c1 c2
+and' c1 c2         = c1 <> c2
 
 many' :: Amount -> Contract -> Contract
 many' _ Zero = Zero
@@ -143,14 +152,14 @@ scalePayment a (MkPayment date direction amount currency) = MkPayment date direc
 
 -- |
 -- >>> semantics c6 (MkDate "2026-05-06")
--- ([MkPayment (MkDate "2026-05-06") Incoming 100.0 EUR],Many 100.0 (Later (MkDate "2026-12-24") (One EUR)))
+-- ([MkPayment {paymentDate = MkDate "2026-05-06", paymentDirection = Incoming, paymentAmount = 100.0, paymentCurrency = EUR}],Many 100.0 (Later (MkDate "2026-12-24") (One EUR)))
 c6 :: Contract
 c6 = Many 100 (And (One EUR)
                    (Later xmas (One EUR)))
 
 -- |
 -- >>> semantics c7 (MkDate "2026-05-06")
--- ([MkPayment (MkDate "2026-05-06") Outgoing 100.0 EUR],Zero)
+-- ([MkPayment {paymentDate = MkDate "2026-05-06", paymentDirection = Outgoing, paymentAmount = 100.0, paymentCurrency = EUR}],Zero)
 c7 :: Contract
 c7 = Exchange (Many 100 (One EUR))
 
