@@ -1,6 +1,24 @@
 {-# LANGUAGE InstanceSigs #-}
 module Validation where
 
+newtype LicensePlate = MkLicensePlate String
+  deriving Show
+
+mkLicensePlate :: String -> Result LicensePlate
+mkLicensePlate s =
+    if length s >= 2 && length s <= 14
+    then Success (MkLicensePlate s)
+    else Failure ["invalid license-plate length"]
+
+newtype SeatCount = MkSeatCount Integer
+  deriving Show
+
+mkSeatCount :: Integer -> Result SeatCount
+mkSeatCount n =
+    if n >= 2
+    then Success (MkSeatCount n)
+    else Failure ["invalid seat count"]
+
 data Car = MkCar { licensePlate :: String,
                    seatCount :: Integer }
     deriving Show
@@ -15,8 +33,10 @@ data Result a =
 
 instance Functor Result where
     fmap :: (a -> b) -> Result a -> Result b
-    fmap f (Success a) = undefined
-    fmap f (Failure errors) = undefined
+    fmap f (Success a) = Success (f a)
+    fmap f (Failure errors) = Failure errors
+
+-- data Car1 = MkCar1 { seatCount1 :: Integer }
 
 mkCar :: String -> Integer -> Result Car
 mkCar s n =
@@ -27,3 +47,4 @@ mkCar s n =
     else if n >= 2
          then Failure ["invalid license-plate length"]
          else Failure ["invalid seat count", "invalid license-plate length"]
+
