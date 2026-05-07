@@ -1,5 +1,6 @@
 {-# LANGUAGE InstanceSigs #-}
 module Intro where
+import Prelude hiding (Semigroup, Monoid)
 
 x :: Integer
 x = 23 + 2 * 21
@@ -392,7 +393,25 @@ double' x = x * 2
 -- op a (op b c) = op (op a b) c
 -- Assoziativität
 -- a + (b + c) = (a + b) + c
+class Semigroup a where
+    -- op a (op b c) = op (op a b) c
+    op :: a -> a -> a
+
+instance Semigroup Shape where
+    op :: Shape -> Shape -> Shape
+    op = MkOverlap
+
+instance Semigroup [a] where
+    op :: [a] -> [a] -> [a]
+    op = (++)
 
 -- Monoid:
 -- Halbgruppe mit neutralem Element
--- op n x = op x n = x
+-- op neutral x = op x neutral = x
+class Semigroup a => Monoid a where
+    -- op neutral x = op x neutral = x
+    neutral :: a
+
+instance Monoid [a] where
+    neutral :: [a]
+    neutral = []
