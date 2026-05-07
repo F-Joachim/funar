@@ -59,7 +59,7 @@ mkCar1 n = fmap MkCar1 (mkSeatCount n)
 x :: Result Integer
 x = pure 1
 
--- (<$>) =
+-- (<$>) = fmap
 
 resultMap2 :: (p -> q -> r) -> Result p -> Result q -> Result r
 resultMap2 f resp resq =
