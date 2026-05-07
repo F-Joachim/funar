@@ -420,3 +420,7 @@ instance Monoid [a] where
 -- [1,2,3,4,5,6]
 -- >>> op [1,2,3] neutral
 -- [1,2,3]
+
+listFold :: (a -> b -> b) -> b -> [a] -> b
+listFold f e [] = e
+listFold f e (x:xs) = f x (listFold f e xs)
