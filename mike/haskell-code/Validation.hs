@@ -1,7 +1,7 @@
 {-# LANGUAGE InstanceSigs #-}
 module Validation where
 
--- "Make illegal states unrepresentable." - Yaron Minksy
+-- "Make illegal states unrepresentable." - Yaron Minsky
 
 newtype LicensePlate = MkLicensePlate String
   deriving Show
