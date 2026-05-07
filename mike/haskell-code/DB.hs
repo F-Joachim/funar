@@ -75,3 +75,24 @@ p1' = splice (put "Mike" 100) (\() ->
       splice (put "Mike" (x+1)) (\() ->
       splice (get "Mike") (\y ->
       Return (show(x+y))))))
+
+-- >>> :info Monad
+-- type Monad :: (* -> *) -> Constraint
+-- class Applicative m => Monad m where
+--   (>>=) :: m a -> (a -> m b) -> m b
+--   (>>) :: m a -> m b -> m b
+--   return :: a -> m a
+--   {-# MINIMAL (>>=) #-}
+--   	-- Defined in ‘GHC.Internal.Base’
+-- instance Monad ((->) r) -- Defined in ‘GHC.Internal.Base’
+-- instance Monad IO -- Defined in ‘GHC.Internal.Base’
+-- instance Monad [] -- Defined in ‘GHC.Internal.Base’
+-- instance Monad Maybe -- Defined in ‘GHC.Internal.Base’
+-- instance Monad Solo -- Defined in ‘GHC.Internal.Base’
+-- instance Monoid a => Monad ((,) a)
+--   -- Defined in ‘GHC.Internal.Base’
+-- instance (Monoid a, Monoid b) => Monad ((,,) a b)
+--   -- Defined in ‘GHC.Internal.Base’
+-- instance (Monoid a, Monoid b, Monoid c) => Monad ((,,,) a b c)
+--   -- Defined in ‘GHC.Internal.Base’
+-- instance Monad (Either e) -- Defined in ‘GHC.Internal.Data.Either’
