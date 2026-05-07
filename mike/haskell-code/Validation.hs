@@ -24,7 +24,7 @@ data Car = MkCar { licensePlate :: LicensePlate,
     deriving Show
 
 -- blöd:
-car1 = MkCar "" (-1)
+-- car1 = MkCar "" (-1)
 
 data Result a =
     Success a
