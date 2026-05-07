@@ -1,3 +1,4 @@
+{-# LANGUAGE InstanceSigs #-}
 module Contract where
 
 -- Auftrag: komplexe Finanzverträge als Daten repräsentieren
@@ -53,6 +54,14 @@ data Contract =
   | Exchange Contract
   | And Contract Contract
   deriving Show
+
+instance Semigroup Contract where
+    (<>) :: Contract -> Contract -> Contract
+    (<>) = And
+
+instance Monoid Contract where
+    mempty :: Contract
+    mempty = Zero
 
 -- "Ich bekomme 1€ jetzt."
 c1 :: Contract
