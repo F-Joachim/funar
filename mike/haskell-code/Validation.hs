@@ -42,6 +42,9 @@ instance Functor Result where
 --   pure :: a -> f a
 --   (<*>) :: f (a -> b) -> f a -> f b
 
+-- fmap  ::   (a -> b) -> f a -> f b
+-- (<*>) :: f (a -> b) -> f a -> f b
+
 instance Applicative Result where
     pure :: a -> Result a
     pure = Success
@@ -79,7 +82,8 @@ resultMap2 f (Success a) (Success b) = Success (f a b)
 
 mkCar :: String -> Integer -> Result Car
 mkCar s n =
-  resultMap2 MkCar (mkLicensePlate s) (mkSeatCount n)
+--  resultMap2 MkCar (mkLicensePlate s) (mkSeatCount n)
+  MkCar <$> (mkLicensePlate s) <*> (mkSeatCount n)
 
 -- >>> mkCar "" 0
 -- Failure ["invalid license-plate length","invalid seat count"]
