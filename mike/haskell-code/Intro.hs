@@ -324,6 +324,10 @@ data Optional a =
   | Result a
   deriving Show
 
+optionalMap :: (a -> b) -> Optional a -> Optional b
+optionalMap f Null = Null
+optionalMap f (Result a) = Result (f a)
+
 -- Index eines Elements in einer Liste
 -- Eq a: Constraint, "a hat mit == vergleichbare Werte"
 listIndex :: Eq a => [a] -> a -> Optional Integer
@@ -338,9 +342,11 @@ listIndex [] element = Null
 listIndex (x:xs) element =
     if x == element
     then Result 0
-    else case listIndex xs element of
+    else optionalMap (\index -> index + 1) (listIndex xs element)
+        
+        {- case listIndex xs element of
            Null -> Null
-           Result index -> Result (index+1)
+           Result index -> Result (index+1) -}
 
 -- Typklasse ~~~ "Interface"
 -- Implementierung: "instance"
