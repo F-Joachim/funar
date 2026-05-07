@@ -315,18 +315,28 @@ listSum (x:xs) = x + listSum xs
 
 -- Funktion auf alle Elemente einer Liste anwenden
 -- eingebaut als map
-listMap :: (a -> b) -> [a] -> [b]
+type List a = [a]
+listMap :: (a -> b) -> List a -> List b
 listMap f [] = undefined
 listMap f (x:xs) = (f x) : (listMap f xs)
+
+optionalMap :: (a -> b) -> Optional a -> Optional b
+optionalMap f Null = Null
+optionalMap f (Result a) = Result (f a)
 
 data Optional a =
     Null
   | Result a
   deriving Show
 
-optionalMap :: (a -> b) -> Optional a -> Optional b
-optionalMap f Null = Null
-optionalMap f (Result a) = Result (f a)
+-- >>> :info Functor
+-- type Functor :: (* -> *) -> Constraint
+-- class Functor f where
+--   fmap :: (a -> b) -> f a -> f b
+
+instance Functor Optional where
+    fmap :: (a -> b) -> Optional a -> Optional b
+    fmap = optionalMap
 
 -- Index eines Elements in einer Liste
 -- Eq a: Constraint, "a hat mit == vergleichbare Werte"
@@ -342,8 +352,9 @@ listIndex [] element = Null
 listIndex (x:xs) element =
     if x == element
     then Result 0
-    else optionalMap (\index -> index + 1) (listIndex xs element)
-        
+--    else optionalMap (\index -> index + 1) (listIndex xs element)
+    else optionalMap (+1) (listIndex xs element)
+          
         {- case listIndex xs element of
            Null -> Null
            Result index -> Result (index+1) -}
