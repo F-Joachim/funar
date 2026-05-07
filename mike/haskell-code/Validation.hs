@@ -1,3 +1,4 @@
+{-# LANGUAGE InstanceSigs #-}
 module Validation where
 
 data Car = MkCar { licensePlate :: String,
@@ -14,7 +15,8 @@ data Result a =
 
 instance Functor Result where
     fmap :: (a -> b) -> Result a -> Result b
-    fmap f (Succes)
+    fmap f (Success a) = undefined
+    fmap f (Failure errors) = undefined
 
 mkCar :: String -> Integer -> Result Car
 mkCar s n =
