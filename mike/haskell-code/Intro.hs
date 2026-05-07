@@ -443,4 +443,12 @@ monoidFold :: Monoid b => [b] -> b
 monoidFold list = listFold op neutral list
 
 -- Aufgabe:
-instance Monoid (Optional a) where
+instance (Semigroup a) => Semigroup (Optional a) where
+  op :: Optional a -> Optional a -> Optional a
+  op x Null = x
+  op Null x = x
+  op (Result a) (Result a') = Result (op a a')
+
+instance (Semigroup a) => Monoid (Optional a) where
+  neutral :: Optional a
+  neutral = Null
