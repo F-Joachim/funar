@@ -1,6 +1,8 @@
 {-# LANGUAGE InstanceSigs #-}
 module Validation where
 
+-- "Make illegal states unrepresentable." - Yaron Minksy
+
 newtype LicensePlate = MkLicensePlate String
   deriving Show
 
@@ -42,6 +44,9 @@ instance Functor Result where
 --   pure :: a -> f a
 --   (<*>) :: f (a -> b) -> f a -> f b
 
+-- fmap  ::   (a -> b) -> f a -> f b
+-- (<*>) :: f (a -> b) -> f a -> f b
+
 instance Applicative Result where
     pure :: a -> Result a
     pure = Success
@@ -56,7 +61,10 @@ data Car1 = MkCar1 { seatCount1 :: SeatCount }
 mkCar1 :: Integer -> Result Car1
 mkCar1 n = fmap MkCar1 (mkSeatCount n)
 
--- (<$>) =
+x :: Result Integer
+x = pure 1
+
+-- (<$>) = fmap
 
 resultMap2 :: (p -> q -> r) -> Result p -> Result q -> Result r
 resultMap2 f resp resq =
@@ -76,7 +84,8 @@ resultMap2 f (Success a) (Success b) = Success (f a b)
 
 mkCar :: String -> Integer -> Result Car
 mkCar s n =
-  resultMap2 MkCar (mkLicensePlate s) (mkSeatCount n)
+--  resultMap2 MkCar (mkLicensePlate s) (mkSeatCount n)
+  MkCar <$> (mkLicensePlate s) <*> (mkSeatCount n)
 
 -- >>> mkCar "" 0
 -- Failure ["invalid license-plate length","invalid seat count"]
