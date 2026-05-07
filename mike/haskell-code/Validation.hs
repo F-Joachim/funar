@@ -56,6 +56,9 @@ data Car1 = MkCar1 { seatCount1 :: SeatCount }
 mkCar1 :: Integer -> Result Car1
 mkCar1 n = fmap MkCar1 (mkSeatCount n)
 
+x :: Result Integer
+x = pure 1
+
 -- (<$>) =
 
 resultMap2 :: (p -> q -> r) -> Result p -> Result q -> Result r
