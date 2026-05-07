@@ -405,6 +405,13 @@ instance Semigroup [a] where
     op :: [a] -> [a] -> [a]
     op = (++)
 
+instance (Semigroup p, Semigroup q) => Semigroup (p, q) where
+    op :: (p, q) -> (p, q) -> (p, q)
+    op (p1, q1) (p2, q2) = (op p1 p2, op q1 q2) 
+
+-- >>> op ([1,2,3], MkCircle point1 5) ([3,4,5], MkSquare point2 3)
+-- ([1,2,3,3,4,5],MkOverlap {shape1 = MkCircle {center = MkPoint 1.0 1.0, radius = 5.0}, shape2 = MkSquare {leftBottom = MkPoint 3.0 3.0, sideLength = 3.0}})
+
 -- Monoid:
 -- Halbgruppe mit neutralem Element
 -- op neutral x = op x neutral = x
@@ -416,6 +423,10 @@ instance Monoid [a] where
     neutral :: [a]
     neutral = []
 
+instance (Monoid p, Monoid q) => Monoid (p, q) where
+    neutral :: (p, q)
+    neutral = (neutral, neutral)
+
 -- >>> op [1,2,3] [4,5,6]
 -- [1,2,3,4,5,6]
 -- >>> op [1,2,3] neutral
@@ -424,3 +435,9 @@ instance Monoid [a] where
 listFold :: (a -> b -> b) -> b -> [a] -> b
 listFold f e [] = e
 listFold f e (x:xs) = f x (listFold f e xs)
+
+monoidFold :: Monoid b => [b] -> b
+
+-- >>> monoidFold [[1,2,3], [4,5,6], [7,8,9]]
+-- [1,2,3,4,5,6,7,8,9]
+monoidFold list = listFold op neutral list
