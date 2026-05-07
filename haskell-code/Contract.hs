@@ -148,3 +148,9 @@ c6 = Many 100 (And (One EUR)
 -- ([MkPayment (MkDate "2026-05-06") Outgoing 100.0 EUR],Zero)
 c7 :: Contract
 c7 = Exchange (Many 100 (One EUR))
+
+-- |
+-- >>> semantics c8 (MkDate "2026-05-06")
+-- ([],Later (MkDate "2026-12-24") (Exchange (Many 100.0 (One EUR))))
+c8 :: Contract
+c8 = Later xmas (Exchange (Many 100 (One EUR)))
