@@ -36,6 +36,7 @@
               buildInputs = [
                 pkgs.cabal-install
                 pkgs.elmPackages.elm pkgs.elmPackages.elm-test pkgs.elmPackages.elm-format pkgs.elmPackages.elm-review
+                pkgs.hlint
 
                 self'.packages.hls
                 self'.formatter
@@ -58,6 +59,10 @@
                     bbenoist.nix
                     haskell.haskell
                     justusadam.language-haskell
+                    mhutchie.git-graph
+                    eamodio.gitlens
+                    usernamehw.errorlens
+                    vscode-icons-team.vscode-icons
                   ];
                 };
               in {
