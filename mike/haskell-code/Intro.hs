@@ -415,3 +415,8 @@ class Semigroup a => Monoid a where
 instance Monoid [a] where
     neutral :: [a]
     neutral = []
+
+-- >>> op [1,2,3] [4,5,6]
+-- [1,2,3,4,5,6]
+-- >>> op [1,2,3] neutral
+-- [1,2,3]
