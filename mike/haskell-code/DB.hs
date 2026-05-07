@@ -95,6 +95,7 @@ instance Monad DB where
 p1'' :: DB String
 
 -- >>> runDB p1'' Map.empty
+-- ("201",fromList [("Mike",101)])
 p1'' = do put "Mike" 100
           x <- get "Mike"
           put "Mike" (x+1)
