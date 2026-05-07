@@ -134,10 +134,9 @@ semantics (And contract1 contract2) today =
 --  let (payments1, residualContract1) = semantics contract1 today
 --      (payments2, residualContract2) = semantics contract2 today
 --   in (payments1 ++ payments2, And residualContract1 residualContract2)
-  let (payments1, residualContract1) = semantics contract1 today
-      (payments2, residualContract2) = semantics contract2 today
-   in (payments1 <> payments2, residualContract1 <> residualContract2)
+   semantics contract1 today <> semantics contract2 today
 
+-- Monoidenhomomorphismus
 
 -- >>> semantics c6 (MkDate "2026-05-06")
 -- ([MkPayment (MkDate "2026-05-06") Incoming 100.0 EUR],Many 100.0 (And Zero (Later (MkDate "2026-12-24") (One EUR))))
