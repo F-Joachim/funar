@@ -378,3 +378,21 @@ listIndex (x:xs) element =
 
 double' :: Num a => a -> a
 double' x = x * 2
+
+
+-- neutrales Element
+-- Zero von Add   -  Add Zero c = Add c Zero = c
+-- 0 von +           0 + x = x + 0 = x
+-- 1 von *           1 * x = x * 1 = x
+-- "leeres Bild" von overlay
+
+-- Halbgruppe:
+-- Typ a
+-- op :: a -> a -> a
+-- op a (op b c) = op (op a b) c
+-- Assoziativität
+-- a + (b + c) = (a + b) + c
+
+-- Monoid:
+-- Halbgruppe mit neutralem Element
+-- op n x = op x n = x
