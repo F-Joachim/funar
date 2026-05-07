@@ -469,3 +469,11 @@ instance (Semigroup a) => Semigroup (Optional a) where
 instance (Semigroup a) => Monoid (Optional a) where
   neutral :: Optional a
   neutral = Null
+
+class MikeSeinFunctor f where
+    mfmap :: (a -> b) -> f a -> f b
+
+-- es geht um das a in p -> a
+instance MikeSeinFunctor ((->) p) where
+  mfmap :: (a -> b) -> (p -> a) -> (p -> b)
+  mfmap f pfa = \ p -> f (pfa p)
