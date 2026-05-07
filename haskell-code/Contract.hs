@@ -82,8 +82,13 @@ fxSwap1' = And (zeroCouponBond xmas 100 EUR)
 data Direction = Incoming | Outgoing
   deriving Show
 
-data Payment = MkPayment Date Direction Amount Currency
-  deriving Show
+data Payment = MkPayment
+  {
+     paymentDate      :: Date
+  ,  paymentDirection :: Direction
+  ,  paymentAmount    :: Amount
+  ,  paymentCurrency  :: Currency
+  } deriving Show
 
 data Contract =
     Zero
@@ -119,19 +124,19 @@ semantics (And contract1 contract2) now =
 and' :: Contract -> Contract -> Contract
 and' Zero contract = contract
 and' contract Zero = contract
-and' c1 c2 = And c1 c2
+and' c1 c2         = And c1 c2
 
 many' :: Amount -> Contract -> Contract
 many' _ Zero = Zero
-many' a c = Many a c
+many' a c    = Many a c
 
 exchange' :: Contract -> Contract
 exchange' Zero = Zero
-exchange' c = Exchange c
+exchange' c    = Exchange c
 
 exchangePayments :: Payment -> Payment
-exchangePayments (MkPayment date Incoming amount currency) = MkPayment date Outgoing amount currency
-exchangePayments (MkPayment date Outgoing amount currency) = MkPayment date Incoming amount currency
+exchangePayments p@(MkPayment _ Incoming _ _) = p { paymentDirection = Outgoing }
+exchangePayments p@(MkPayment _ Outgoing _ _) = p { paymentDirection = Incoming }
 
 scalePayment :: Amount -> Payment -> Payment
 scalePayment a (MkPayment date direction amount currency) = MkPayment date direction (a * amount) currency
