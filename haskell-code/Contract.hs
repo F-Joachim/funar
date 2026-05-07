@@ -1,4 +1,3 @@
-{-# LANGUAGE LambdaCase #-}
 module Contract where
 
 -- Auftrag: komplexe Finanzverträge als Daten repräsentieren
@@ -20,9 +19,7 @@ Vorgehensweise:
   Weihnachten bekomme ich 100€ und zahle 100$.
 -}
 
-
-
-data Date = MkDate String -- ISO-Format
+newtype Date = MkDate String -- ISO-Format
   deriving (Show, Eq, Ord)
 
 xmas :: Date
@@ -101,7 +98,7 @@ data Contract =
 -- Zahlungen bis zu dem Datum, "heute"
 -- -> "Residualvertrag"
 semantics :: Contract -> Date -> ([Payment], Contract)
-semantics (Zero) _ = ([], Zero)
+semantics Zero _ = ([], Zero)
 semantics (One currency) now = ([MkPayment now Incoming 1 currency], Zero)
 semantics (Many amount contract) now =
   let (ps, c) = semantics contract now
