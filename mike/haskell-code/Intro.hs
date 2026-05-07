@@ -353,7 +353,7 @@ listIndex (x:xs) element =
     if x == element
     then Result 0
 --    else optionalMap (\index -> index + 1) (listIndex xs element)
-    else optionalMap (+1) (listIndex xs element)
+    else fmap (+1) (listIndex xs element)
           
         {- case listIndex xs element of
            Null -> Null
