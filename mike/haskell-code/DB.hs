@@ -80,19 +80,23 @@ p1' = splice (put "Mike" 100) (\() ->
 -- type Monad :: (* -> *) -> Constraint
 -- class Applicative m => Monad m where
 --   (>>=) :: m a -> (a -> m b) -> m b
---   (>>) :: m a -> m b -> m b
 --   return :: a -> m a
---   {-# MINIMAL (>>=) #-}
---   	-- Defined in ‘GHC.Internal.Base’
--- instance Monad ((->) r) -- Defined in ‘GHC.Internal.Base’
--- instance Monad IO -- Defined in ‘GHC.Internal.Base’
--- instance Monad [] -- Defined in ‘GHC.Internal.Base’
--- instance Monad Maybe -- Defined in ‘GHC.Internal.Base’
--- instance Monad Solo -- Defined in ‘GHC.Internal.Base’
--- instance Monoid a => Monad ((,) a)
---   -- Defined in ‘GHC.Internal.Base’
--- instance (Monoid a, Monoid b) => Monad ((,,) a b)
---   -- Defined in ‘GHC.Internal.Base’
--- instance (Monoid a, Monoid b, Monoid c) => Monad ((,,,) a b c)
---   -- Defined in ‘GHC.Internal.Base’
--- instance Monad (Either e) -- Defined in ‘GHC.Internal.Data.Either’
+
+--     pure :: a -> m a
+
+instance Functor DB where
+
+instance Applicative DB where
+
+instance Monad DB where
+    (>>=) = splice
+    return = Return
+
+p1'' :: DB String
+
+-- >>> runDB p1'' Map.empty
+p1'' = do put "Mike" 100
+          x <- get "Mike"
+          put "Mike" (x+1)
+          y <- get "Mike"
+          return (show(x+y))
