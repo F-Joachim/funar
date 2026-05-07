@@ -20,19 +20,10 @@ data DecodeError
 newtype Decoder a = Decoder {runDecoder :: Json.Value -> Either DecodeError a}
 
 instance Functor Decoder where
-  fmap f (Decoder decode) = Decoder (fmap (fmap f) decode)
 
 instance Applicative Decoder where
-  pure :: a -> Decoder a
-  pure a = Decoder (pure (pure a))
-  (<*>) :: Decoder (a -> b) -> Decoder a -> Decoder b
-  Decoder decodeF <*> Decoder decodeA =
-    Decoder ((<*>) <$> decodeF <*> decodeA)
 
 instance Monad Decoder where
-  (>>=) :: Decoder a -> (a -> Decoder b) -> Decoder b
-  Decoder decode >>= f =
-    Decoder ((>>=) <$> decode <*> flip (runDecoder . f))
 
 string :: Decoder String
 string = Decoder (\ json ->
