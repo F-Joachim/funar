@@ -36,7 +36,16 @@ instance Functor Result where
     fmap f (Success a) = Success (f a)
     fmap f (Failure errors) = Failure errors
 
--- data Car1 = MkCar1 { seatCount1 :: Integer }
+data Car1 = MkCar1 { seatCount1 :: SeatCount }
+
+mkCar1 :: Integer -> Result Car1
+mkCar1 n = fmap MkCar1 (mkSeatCount n)
+
+resultMap2 :: (a -> b -> c) -> Result a -> Result b -> Result c
+resultMap2 f (Failure errors1) (Failure errors2) = Failure (errors1 ++ errors2)
+resultMap2 f (Failure errors) (Success b) = Failure errors
+resultMap2 f (Success a) (Failure errors) = Failure errors
+resultMap2 f (Success a) (Success b) = Success (f a b)
 
 mkCar :: String -> Integer -> Result Car
 mkCar s n =
