@@ -41,3 +41,8 @@ p1 = Put "Mike" 100 (\() ->
      Return (show(x+y))))))
 
 runDB :: DB a -> Map Key Value -> (a, Map Key Value)
+runDB (Get key callback) db =
+    let value = db ! key
+    in undefined
+runDB (Put key value callback) db = undefined
+runDB (Return result) db = (result, db)
