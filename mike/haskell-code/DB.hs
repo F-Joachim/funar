@@ -1,5 +1,8 @@
 module DB where
 
+import qualified Data.Map.Strict as Map
+import Data.Map.Strict (Map, (!))
+
 {-
 put "Mike" 100
 x = get "Mike"
@@ -36,3 +39,5 @@ p1 = Put "Mike" 100 (\() ->
      Put "Mike" (x+1) (\() ->
      Get "Mike" (\y ->
      Return (show(x+y))))))
+
+runDB :: DB a -> Map Key Value -> (a, Map Key Value)
