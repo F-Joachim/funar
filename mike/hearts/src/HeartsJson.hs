@@ -52,7 +52,7 @@ constructor1Decoder :: Decoder a -> (a -> b) -> Decoder b
 constructor1Decoder = flip fmap
 
 playerDecoder :: Decoder Cards.Player
-playerDecoder = constructor1Decoder Decode.string Cards.Player
+playerDecoder = Cards.Player <$> Decode.string 
 
 -- | Farbe codieren
 -- >>> encodeSuit Cards.Diamonds
