@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module DB where
 
 import qualified Data.Map.Strict as Map
@@ -101,3 +102,9 @@ p1'' = do put "Mike" 100
           put "Mike" (x+1)
           y <- get "Mike"
           return (show(x+y))
+
+-- fmap ::        (a ->   b) -> f a -> f b
+-- (<*>) ::     f (a ->   b) -> f a -> f b
+-- flip (>>=) ::  (a -> f b) -> f a -> f b
+
+-- (>>=) :: f a -> (a -> f b) -> f b
