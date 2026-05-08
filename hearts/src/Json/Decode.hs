@@ -24,6 +24,9 @@ instance Functor Decoder where
 instance Applicative Decoder where
 
 instance Monad Decoder where
+  (>>=) :: Decoder a -> (a -> Decoder b) -> Decoder b
+  Decoder decode >>= f =
+    Decoder ((>>=) <$> decode <*> flip (runDecoder . f))
 
 string :: Decoder String
 string = Decoder (\ json ->
