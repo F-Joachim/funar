@@ -58,6 +58,29 @@ runDB (Put key value callback) db =
     in runDB (callback ()) db'
 runDB (Return result) db = (result, db)
 
+runDBSQLite :: Connection -> DB a -> IO a
+runDBSQLite conn (Get key callback) =
+    do [MkEntry key value] <- 
+         queryNamed conn "SELECT key, value FROM ENTRIES where key = :key" 
+                         [":key" := key]
+       runDBSQLite conn (callback value)
+runDBSQLite conn (Put key value callback) =
+    do execute conn "REPLACE INTO entries (key, value) VALUES (?, ?)" (MkEntry key value)
+       runDBSQLite conn (callback ())
+runDBSQLite conn (Return result) = return result
+
+execDBSQLite :: DB a -> IO a
+
+-- >>> execDBSQLite p1
+-- "201"
+
+execDBSQLite db =
+    do conn <- open "test.db"
+       execute_ conn "CREATE TABLE IF NOT EXISTS entries (key TEXT PRIMARY KEY, value INTEGER)"
+       result <- runDBSQLite conn db
+       close conn
+       return result
+
 data Entry = MkEntry Key Value
   deriving Show
 
@@ -68,10 +91,7 @@ instance FromRow Entry where
 instance ToRow Entry where
     toRow (MkEntry key value) = toRow (key, value)
 
-runDBSQLite :: Connection -> DB a -> IO a
-runDBSQLite conn (Get key callback) = undefined
-runDBSQLite conn (Put key value callback) = undefined
-runDBSQLite conn (Return result) = return result
+-- CREATE TABLE entries (key TEXT PRIMARY KEY, value INTEGER)
 
 -- return :: a -> IO a
 
