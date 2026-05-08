@@ -1,8 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE InstanceSigs #-}
 module DB where
 
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map, (!))
+
+import Control.Applicative
+import Database.SQLite.Simple
+import Database.SQLite.Simple.FromRow
 
 {-
 put "Mike" 100
@@ -52,6 +57,25 @@ runDB (Put key value callback) db =
     let db' = Map.insert key value db
     in runDB (callback ()) db'
 runDB (Return result) db = (result, db)
+
+data Entry = MkEntry Key Value
+  deriving Show
+
+instance FromRow Entry where
+    fromRow :: RowParser Entry
+    fromRow = MkEntry <$> field <*> field
+
+instance ToRow Entry where
+    toRow (MkEntry key value) = toRow (key, value)
+
+runDBSQLite :: Connection -> DB a -> IO a
+runDBSQLite conn (Get key callback) = undefined
+runDBSQLite conn (Put key value callback) = undefined
+runDBSQLite conn (Return result) = return result
+
+-- return :: a -> IO a
+
+-- foo = execute_
 
 get :: Key -> DB Value
 get key = Get key Return -- (\value -> Return value)
