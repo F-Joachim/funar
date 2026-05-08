@@ -11,17 +11,28 @@ import qualified Data.Vector as Vector
 import Data.String (fromString)
 
 data DecodeError
-  = Field String DecodeError
-  | Index Int DecodeError
-  | OneOf [DecodeError]
+  = Field String DecodeError -- im Feld eines Json-Objekts steckt der Fehler
+  | Index Int DecodeError -- im Feld eines Json-Arrays steckt der Fehler
+  | OneOf [DecodeError] -- alle Summanden einer Summe liefern einen Fehler
   | Failure String Json.Value
   deriving (Show, Eq)
+
+-- data Either l r = Left l | Right r
+-- Left ist für "Fehler, nicht erledigt, noch nicht fertig"
+-- Right ist für "ordnungsgemäß erledigt"
 
 newtype Decoder a = Decoder {runDecoder :: Json.Value -> Either DecodeError a}
 
 instance Functor Decoder where
+  fmap :: (a -> b) -> Decoder a -> Decoder b
+  fmap f (Decoder decode) = Decoder (fmap (fmap f) decode)
 
 instance Applicative Decoder where
+  pure :: a -> Decoder a
+  pure a = Decoder (pure (pure a))
+  (<*>) :: Decoder (a -> b) -> Decoder a -> Decoder b
+  Decoder decodeF <*> Decoder decodeA =
+    Decoder ((<*>) <$> decodeF <*> decodeA)
 
 instance Monad Decoder where
 
