@@ -50,6 +50,7 @@ data Game a = -- entspricht DB a
   | RoundOverTrick (Maybe (Trick, Player) -> Game a)
   | PlayerAfter Player (Player -> Game a)
   | GameOver (Maybe Player -> Game a)
+  | GetCommand (GameCommand -> Game a)
   | Return a
 
 instance Functor Game where
@@ -72,6 +73,9 @@ instance Monad Game where
             callback x >>= next)
     (>>=) (GameOver callback) next =
         GameOver (\x ->
+            callback x >>= next)
+    (>>=) (GetCommand callback) next =
+        GetCommand (\x ->
             callback x >>= next)
     (>>=) (Return result) next = next result
 
@@ -121,3 +125,12 @@ tableProcessCommandM (PlayCard player card) =
 
        else do recordEventM (IllegalCardAttempted player card)
                return Nothing
+
+-- liefert Gewinner:in
+tableLoopM :: GameCommand -> Game Player
+tableLoopM command =
+    do maybeWinner <- tableProcessCommandM command
+       case maybeWinner of
+        Just winner -> return winner
+        Nothing ->
+            GetCommand tableLoopM -- erst mal GameCommand holen, dann wieder tableLoopM 
