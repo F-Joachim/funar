@@ -65,5 +65,7 @@ recordEventM event = RecordEvent event Return
 -- Maybe Player: wer hat gewonnen, falls das Spiel vorbei ist
 tableProcessCommandM :: GameCommand -> Game (Maybe Player)
 tableProcessCommandM (DealHands hands) =
-    do undefined
+    do let events = map (uncurry HandDealt) (Map.toList hands)
+       mapM_ recordEventM events
+       return Nothing
 tableProcessCommandM (PlayCard player card) = undefined
