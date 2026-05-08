@@ -46,6 +46,7 @@ data GameCommand =
 
 data Game a = -- entspricht DB a
     RecordEvent GameEvent (() -> Game a) -- wie Put
+  | IsPlayValid Player Card (Bool -> Game a) -- wie Get
   | Return a
 
 instance Functor Game where
@@ -57,15 +58,27 @@ instance Monad Game where
     (>>=) (RecordEvent event callback) next =
         RecordEvent event (\() ->
             callback () >>= next)
+    (>>=) (IsPlayValid player card callback) next =
+        IsPlayValid player card (\x ->
+            callback x >>= next)
     (>>=) (Return result) next = next result
 
 recordEventM :: GameEvent -> Game ()
 recordEventM event = RecordEvent event Return
 
+isPlayValidM :: Player -> Card -> Game Bool
+isPlayValidM player card = IsPlayValid player card Return
+
 -- Maybe Player: wer hat gewonnen, falls das Spiel vorbei ist
 tableProcessCommandM :: GameCommand -> Game (Maybe Player)
 tableProcessCommandM (DealHands hands) =
     do let events = map (uncurry HandDealt) (Map.toList hands)
-       mapM_ recordEventM events
+       let recordEvents = map recordEventM events
+       -- mapM_ recordEventM events
+       sequence_ recordEvents
        return Nothing
-tableProcessCommandM (PlayCard player card) = undefined
+tableProcessCommandM (PlayCard player card) = 
+    do valid <- isPlayValidM player card
+       if valid
+       then undefined
+       else undefined
