@@ -1,7 +1,13 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE InstanceSigs #-}
 module DB where
 
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map, (!))
+
+import Control.Applicative
+import Database.SQLite.Simple
+import Database.SQLite.Simple.FromRow
 
 {-
 put "Mike" 100
@@ -52,6 +58,45 @@ runDB (Put key value callback) db =
     in runDB (callback ()) db'
 runDB (Return result) db = (result, db)
 
+runDBSQLite :: Connection -> DB a -> IO a
+runDBSQLite conn (Get key callback) =
+    do [MkEntry key value] <- 
+         queryNamed conn "SELECT key, value FROM ENTRIES where key = :key" 
+                         [":key" := key]
+       runDBSQLite conn (callback value)
+runDBSQLite conn (Put key value callback) =
+    do execute conn "REPLACE INTO entries (key, value) VALUES (?, ?)" (MkEntry key value)
+       runDBSQLite conn (callback ())
+runDBSQLite conn (Return result) = return result
+
+execDBSQLite :: DB a -> IO a
+
+-- >>> execDBSQLite p1
+-- "201"
+
+execDBSQLite db =
+    do conn <- open "test.db"
+       execute_ conn "CREATE TABLE IF NOT EXISTS entries (key TEXT PRIMARY KEY, value INTEGER)"
+       result <- runDBSQLite conn db
+       close conn
+       return result
+
+data Entry = MkEntry Key Value
+  deriving Show
+
+instance FromRow Entry where
+    fromRow :: RowParser Entry
+    fromRow = MkEntry <$> field <*> field
+
+instance ToRow Entry where
+    toRow (MkEntry key value) = toRow (key, value)
+
+-- CREATE TABLE entries (key TEXT PRIMARY KEY, value INTEGER)
+
+-- return :: a -> IO a
+
+-- foo = execute_
+
 get :: Key -> DB Value
 get key = Get key Return -- (\value -> Return value)
 
@@ -101,3 +146,9 @@ p1'' = do put "Mike" 100
           put "Mike" (x+1)
           y <- get "Mike"
           return (show(x+y))
+
+-- fmap ::        (a ->   b) -> f a -> f b
+-- (<*>) ::     f (a ->   b) -> f a -> f b
+-- flip (>>=) ::  (a -> f b) -> f a -> f b
+
+-- (>>=) :: f a -> (a -> f b) -> f b
